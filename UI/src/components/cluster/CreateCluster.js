@@ -30,7 +30,8 @@ class CreateCluster extends Component {
       nodeCount: "",
       owner:'',
       lead:'',
-      clusterName: ""
+      clusterName: "",
+      users:[]
       /* message: "",
       cloudSrvc: "AzureNative",
       masterCount: "1",
@@ -174,13 +175,14 @@ class CreateCluster extends Component {
       imageName: this.state.imageName ? this.state.imageName : "Ubuntu",
       kubeDashboard: this.state.kubeDashboard,
       loggingEnabled: this.state.loggingEnabled,
-      monitoringEnabled: this.state.monitoringEnabled,
-      credentialName: this.state.credentials,*/
+      monitoringEnabled: this.state.monitoringEnabled,*/
+      credentialName: this.state.credentials,
       kubeDashboard: this.state.kubeDashboard,
       nodeCount: this.state.nodeCount ? this.state.nodeCount : Date.now(),
       clusterName: this.state.clusterName,
       owner: this.state.owner,
       lead:this.state.lead,
+      users: this.state.users
     };
     console.log('asd',requestParams)
 
@@ -234,7 +236,7 @@ class CreateCluster extends Component {
                       </div>
                     </div>
                     
-                    <div className="form-group">
+            {/*         <div className="form-group">
                       <label className="col-md-12 required">
                         Application ID
                       </label>
@@ -251,10 +253,10 @@ class CreateCluster extends Component {
                           )}
                         />
                       </div>
-                    </div>
+                    </div> */}
 
                     <div className="form-group">
-                      <label className="col-md-12 required">Owner</label>
+                      <label className="col-md-12 required">Application Owner</label>
                       <div className="col-md-12">
                         <input
                           type="text"
@@ -271,13 +273,13 @@ class CreateCluster extends Component {
                     </div>
 
                     <div className="form-group">
-                      <label className="col-md-12 required">App Lead</label>
+                      <label className="col-md-12 required">Applicable Users</label>
                       <div className="col-md-12">
                         <input
                           type="text"
                           name="lead"
                           required
-                          value={this.state.lead}
+                          value={this.state.users}
                           onChange={this.handleOnChange}
                           className={classNames(
                             "form-control form-control-line",
@@ -287,13 +289,13 @@ class CreateCluster extends Component {
                       </div>
                     </div>
                     
-{/*                     <DropDown
-                      data={this.state.lookupData.credentials}
-                      value={this.state.credentials}
-                      onChange={this.handleOnChange}
-                      mandatory={this.state.credentialsMissing}
-                      required={true}
-                    /> */}
+{                     <DropDown
+                        data={this.state.lookupData.credentials}
+                        value={this.state.credentials}
+                        onChange={this.handleOnChange}
+                        mandatory={this.state.credentialsMissing}
+                        required={true}
+                    /> }
 
                     <div className="form-group float-left">
                       <div className="col-sm-10">

@@ -28,7 +28,8 @@ class Dropdown extends Component {
     return (
       <div className="form-group">
         <label className={classNames("col-sm-12", required ? "required" : "")}>
-          {data.header}
+          {/*{data.header}*/}
+          Platform
         </label>
         <div className="col-sm-12">
           <select
@@ -41,6 +42,9 @@ class Dropdown extends Component {
             onChange={onChange}
           >
             <option value="">Select</option>
+            <option value="">AWS</option>
+            <option value="">AZURE</option>
+            <option value="">GCP</option>
             {options}
           </select>
         </div>
