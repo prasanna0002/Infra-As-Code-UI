@@ -48,6 +48,9 @@ class Dropdown extends Component {
             onChange={onChange}
           >
             <option value="">Select</option>
+            <option value="">AWS</option>
+            <option value="">AZURE</option>
+            <option value="">GCP</option>
             {options}
           </select>
         </div>
