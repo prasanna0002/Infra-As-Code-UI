@@ -31,16 +31,8 @@ class CreateCluster extends Component {
       owner:'',
       lead:'',
       clusterName: "",
-<<<<<<< HEAD
-      user:'',
-      message: "",
-      platform:"",
-      cred:{options:[{value:'aws',description:'AWS'},{value:'gcp',description:'GCP'},{value:'azure',description:'AZURE'}]},
-/*       cloudSrvc: "AzureNative",
-=======
       message: "",
       cloudSrvc: "AzureNative",
->>>>>>> 004e989e028644f5da763e3b67e300547df46320
       masterCount: "1",
       masterSize: "Standard_B2s",
       nodeSize: "Standard_B1ms",
@@ -53,10 +45,7 @@ class CreateCluster extends Component {
       masterCountMissing: false,
       clusterNameMissing: false,
       credentialsMissing: false,
-<<<<<<< HEAD
- */              
-=======
->>>>>>> 004e989e028644f5da763e3b67e300547df46320
+            
     };
   };
 
@@ -312,7 +301,6 @@ class CreateCluster extends Component {
                       </div>
                     </div>
                     
-<<<<<<< HEAD
                      <DropDown
                       data={this.state.cred}
                       value={this.state.cred}
@@ -321,15 +309,6 @@ class CreateCluster extends Component {
                       mandatory={this.state.credentialsMissing}
                       required={true}
 /> 
-=======
-{                     <DropDown
-                      data={this.state.lookupData.credentials}
-                      value={this.state.credentials}
-                      onChange={this.handleOnChange}
-                      mandatory={this.state.credentialsMissing}
-                      required={true}
-                    /> }
->>>>>>> 004e989e028644f5da763e3b67e300547df46320
 
                     <div className="form-group float-left">
                       <div className="col-sm-10">
