@@ -7,16 +7,22 @@ class Dropdown extends Component {
   }
   generateOptions = () => {
     const { data } = this.props;
-    if (!data || data.length === 0) {
+    //const data  = [{value:'a',desc:'12'},{value:'b',desc:'c'}]
+    console.log('props ',this.props);
+    console.log('dataDrop ',data.options.value);
+    /* const options = data.map((op, i)=>{
+      console.log(op.value)
+    }) */
+     if (!data || data.length === 0) {
       return null;
     }
     const options = data.options.map((option, i) => {
       return (
-        <option key={"option_" + i} value={option.value}>
+        <option key={"option_" + i} value={option.value} name={option.value}>
           {option.description}
         </option>
       );
-    });
+    }); 
     return options;
   };
   render() {
@@ -28,7 +34,8 @@ class Dropdown extends Component {
     return (
       <div className="form-group">
         <label className={classNames("col-sm-12", required ? "required" : "")}>
-          {data.header}
+          {/*{data.header}*/}
+          Platform
         </label>
         <div className="col-sm-12">
           <select

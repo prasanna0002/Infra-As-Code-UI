@@ -22,7 +22,7 @@ class CreateCluster extends Component {
       dashboard: [],
       credentials: [],
     };
-    this.state.loading = true;
+    this.state.loading = false;
   }
 
   getInitialState = () => {
@@ -30,9 +30,12 @@ class CreateCluster extends Component {
       nodeCount: "",
       owner:'',
       lead:'',
-      clusterName: ""
-      /* message: "",
-      cloudSrvc: "AzureNative",
+      clusterName: "",
+      user:'',
+      message: "",
+      platform:"",
+      cred:{options:[{value:'aws',description:'AWS'},{value:'gcp',description:'GCP'},{value:'azure',description:'AZURE'}]},
+/*       cloudSrvc: "AzureNative",
       masterCount: "1",
       masterSize: "Standard_B2s",
       nodeSize: "Standard_B1ms",
@@ -44,7 +47,8 @@ class CreateCluster extends Component {
       cloudSrvcMissing: false,
       masterCountMissing: false,
       clusterNameMissing: false,
-      credentialsMissing: false, */
+      credentialsMissing: false,
+ */              
     };
   };
 
@@ -95,7 +99,7 @@ class CreateCluster extends Component {
   };
 
   componentDidMount() {
-    this.loadLookupOptionsData();
+    //this.loadLookupOptionsData();
 
     ClusterStore.addEventListener(
       EventType.CREATE_CLUSTER_SUCCESS,
@@ -122,12 +126,20 @@ class CreateCluster extends Component {
     this.setState(this.getInitialState());
   };
   handleOnChange = (event) => {
+    console.log("eve", event.target.value);
     this.setState({
       [event.target.name]: event.target.value,
       [event.target.name + "Missing"]: false,
       message: "",
     });
   };
+  handleDropDownChange = (event)=>{
+    console.log("dropdown change")
+    this.setState({
+      platform: event.target.value,
+      message: ""
+    });
+  }
   handleOnProviderChange = (event) => {
     let nodeSize = "";
     switch (event.target.value) {
@@ -160,6 +172,7 @@ class CreateCluster extends Component {
       return false;
     }
 
+
     const requestParams = {/* 
       cloudSrvc: this.state.cloudSrvc,
       masterCount:
@@ -175,26 +188,30 @@ class CreateCluster extends Component {
       kubeDashboard: this.state.kubeDashboard,
       loggingEnabled: this.state.loggingEnabled,
       monitoringEnabled: this.state.monitoringEnabled,
-      credentialName: this.state.credentials,*/
-      kubeDashboard: this.state.kubeDashboard,
+      credentialName: this.state.credentials,
+      kubeDashboard: this.state.kubeDashboard,*/
       nodeCount: this.state.nodeCount ? this.state.nodeCount : Date.now(),
       clusterName: this.state.clusterName,
       owner: this.state.owner,
       lead:this.state.lead,
+      user: this.state.user,
+      platform:this.state.platform
     };
-    console.log('asd',requestParams)
+    console.log('req params: ',requestParams)
 
     Object.keys(requestParams).map(
       (key) => requestParams[key] === undefined && delete requestParams[key]
     );
 
     ClusterActionCreator.createCluster(requestParams);
+    
   };
 
   render() {
     if (this.state.loading || !this.state.lookupData.provider) {
       return <Loader />;
     }
+    console.log('cred ',this.state.cred);
     return (
       <div className="container-fluid">
         <div className="row page-titles">
@@ -234,7 +251,7 @@ class CreateCluster extends Component {
                       </div>
                     </div>
                     
-                    <div className="form-group">
+{/*                     <div className="form-group">
                       <label className="col-md-12 required">
                         Application ID
                       </label>
@@ -251,10 +268,10 @@ class CreateCluster extends Component {
                           )}
                         />
                       </div>
-                    </div>
+                    </div> */}
 
                     <div className="form-group">
-                      <label className="col-md-12 required">Owner</label>
+                      <label className="col-md-12 required">Application Owner</label>
                       <div className="col-md-12">
                         <input
                           type="text"
@@ -271,13 +288,13 @@ class CreateCluster extends Component {
                     </div>
 
                     <div className="form-group">
-                      <label className="col-md-12 required">App Lead</label>
+                      <label className="col-md-12 required">Applicable Users</label>
                       <div className="col-md-12">
                         <input
                           type="text"
-                          name="lead"
+                          name="user"
                           required
-                          value={this.state.lead}
+                          value={this.state.user}
                           onChange={this.handleOnChange}
                           className={classNames(
                             "form-control form-control-line",
@@ -287,13 +304,14 @@ class CreateCluster extends Component {
                       </div>
                     </div>
                     
-{/*                     <DropDown
-                      data={this.state.lookupData.credentials}
-                      value={this.state.credentials}
-                      onChange={this.handleOnChange}
+                     <DropDown
+                      data={this.state.cred}
+                      value={this.state.cred}
+                      name='platform'
+                      onChange={this.handleDropDownChange}
                       mandatory={this.state.credentialsMissing}
                       required={true}
-                    /> */}
+/> 
 
                     <div className="form-group float-left">
                       <div className="col-sm-10">
@@ -315,9 +333,9 @@ class CreateCluster extends Component {
                         </button>
                       </div>
                     </div>
-                    <div className="form-group">
+{/*                     <div className="form-group">
                       <h5 className="text-themecolor">{this.state.message}</h5>
-                    </div>
+                    </div> */}
                   </form>
                 </div>
               </div>

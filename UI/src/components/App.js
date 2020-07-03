@@ -35,7 +35,7 @@ class App extends Component {
     );
   }
   render() {
-    const toRender = this.state.loading ? (
+     const toRender = this.state.loading ? (
       <div id="main-wrapper">
         <Header />
         <Loader />
@@ -48,7 +48,14 @@ class App extends Component {
         <Sidebar />
       </div>
     );
-    return toRender;
+    return toRender;  
+
+/*     return (
+        <div>
+          <h1>Hello world</h1>
+        </div>
+      
+    ) */
   }
 }
 
