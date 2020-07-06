@@ -6,7 +6,19 @@ class TextBox extends Component {
     super(props);
   }
   render() {
-    const { labelName, onChange, value, required, isPassword, id, showEyeIcon, eyeIcon } = this.props;
+    const {
+      labelName,
+      onChange,
+      value,
+      required,
+      isPassword,
+      id,
+      showEyeIcon,
+      eyeIcon,
+      disabled = false,
+      isReadOnly = false,
+      type = "text",
+    } = this.props;
     return (
       <div className="form-group">
         <label className={classNames("col-md-12", !required ? "" : "required")}>
@@ -14,7 +26,7 @@ class TextBox extends Component {
         </label>
         <div className="col-md-12">
           <input
-            type={isPassword ? "password" : "text"}
+            type={isPassword ? "password" : type}
             id={id}
             value={value}
             onChange={onChange}
@@ -22,6 +34,8 @@ class TextBox extends Component {
               "form-control form-control-line",
               required && !value ? "mandatory" : ""
             )}
+            readOnly={isReadOnly}
+            disabled={disabled}
           />
           {showEyeIcon ? eyeIcon : null}
         </div>

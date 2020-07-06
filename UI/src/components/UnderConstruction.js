@@ -19,7 +19,7 @@ class UnderConstruction extends Component {
             <div className="card">
               <div className="card-block">
                 <img
-                  src="../src/styles/images/UnderConstruction_xlarge.jpg"
+                  src="./styles/images/UnderConstruction_xlarge.jpg"
                   alt="under construction"
                 ></img>
               </div>

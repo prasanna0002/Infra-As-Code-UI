@@ -21,10 +21,62 @@ class DashBoardStore extends EventEmitter {
       case ActionType.GET_LOOKUP_OPTIONS_DATA_FAILED:
         this.emit(EventType.CREATE_CLUSTER_FAILED);
         break;
+      case ActionType.GET_CLUSTER_DATA:
+        this.clusterData = action.value;
+        this.emit(EventType.GET_CLUSTER_DATA_SUCCESS);
+        break;
       default:
         break;
     }
   };
+
+  getClusterData() {
+    const options = this.clusterData;
+    const data = Object.keys(options).map((_key) => {
+      const item = options[_key];
+      return {
+            description: item.clusterName,
+            value: item.clusterReqId,
+          };
+    });
+    return {
+      header: "Cluster Name",
+      name: "Cluster Name",
+      options: data
+    };
+  }
+
+  getResourceQuotaBucketType(bucketValue) {  
+    if(bucketValue === "Custom") {
+      return "Custom";
+    }
+
+    const lookUpOptions = this.getOptions();
+    const resourceQuotaType = lookUpOptions.find((option) => {
+      return Object.keys(option)[0] === "resourceQuotaType";
+    });
+
+    const options = resourceQuotaType["resourceQuotaType"];
+    const quotaItem = options.find((item) => item.value === bucketValue);
+
+    return quotaItem && quotaItem.description;
+  }
+
+  getLimitRangeBucketType(bucketValue) {    
+    if(bucketValue === "Custom") {
+      return "Custom";
+    }
+    
+    const lookUpOptions = this.getOptions();
+    const limitRangeType = lookUpOptions.find((option) => {
+      return Object.keys(option)[0] === "limitRangeType";
+    });
+
+    const options = limitRangeType["limitRangeType"];
+    const quotaItem = options.find((item) => item.value === bucketValue);
+
+    return quotaItem && quotaItem.description;
+  }
 
   getOptions = () => {
     const options = this.lookupOptionData ? this.lookupOptionData.options : {};
@@ -91,6 +143,26 @@ class DashBoardStore extends EventEmitter {
         });
         options = _filter6["credentialType"];
         break;
+      case "Region":
+        const _filter7 = optionsData.find((option) => {
+          return Object.keys(option)[0] === "availZone";
+        });
+        options = _filter7["availZone"];
+        break;
+        case "Limit Range":
+          const _filter8 = optionsData.find((option) => {
+            return Object.keys(option)[0] === "limitRangeType";
+          });
+          options = _filter8["limitRangeType"];
+          options.push({description: "Custom", value: "Custom"});
+          break;
+          case "Resource Quota":
+            const _filter9 = optionsData.find((option) => {
+              return Object.keys(option)[0] === "resourceQuotaType";
+            });
+            options = _filter9["resourceQuotaType"];
+            options.push({description: "Custom", value: "Custom"});
+            break;
     }
 
     return {

@@ -1,12 +1,6 @@
 export default {
-  DASHBOARD: "Dashboard",
-  APPLICATIONS: "Applications",
-  BLUEPRINTS: "BluePrints",
-  RESOURCES: "Resources",
+  DASHBOARD: "DashBoard",
+  CLUSTER_MANAGEMENT: "Applications",
+  SECURITY: "BluePrints",
+  NAMESPACE: "Resources",
 };
-
-/*
-APPLICATIONS
-BLUEPRINTS
-RESOURCES
-*/

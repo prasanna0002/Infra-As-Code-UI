@@ -11,23 +11,21 @@ class MenuStore extends EventEmitter {
     this.items = [
       {
         id: 1,
-        name: Menu.DASHBOARD,
+        name: Menu.CLUSTER_MANAGEMENT,
         isActive: true,
+        class: "fa fa-bars",
       },
       {
         id: 2,
-        name: Menu.APPLICATIONS,
+        name: Menu.NAMESPACE,
         isActive: false,
+        class: "fa fa-slack",
       },
       {
         id: 3,
-        name: Menu.BLUEPRINTS,
+        name: Menu.SECURITY,
         isActive: false,
-      },
-      {
-        id: 4,
-        name: Menu.RESOURCES,
-        isActive: false,
+        class: "fa fa-lock",
       },
     ];
   }
@@ -41,27 +39,21 @@ class MenuStore extends EventEmitter {
         break;
     }
   };
-
   updateMenu = (item) => {
-    console.log('updateMenu', item);
     const _items = Object.assign([], this.items).map((i) => {
       i.isActive = false;
-      console.log('id', i.id, item.id)
       if (i.id === item.id) {
         i.isActive = true;
       }
       return i;
     });
   };
-
   getSelectedMenu = () => {
     return this.items.find((i) => i.isActive);
   };
-
   addEventListener = (eventName, callBack) => {
     this.on(eventName, callBack);
   };
-  
   removeEventListener = (eventName, callBack) => {
     this.removeListener(eventName, callBack);
   };

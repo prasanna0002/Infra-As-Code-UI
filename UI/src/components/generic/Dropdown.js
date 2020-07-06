@@ -7,53 +7,70 @@ class Dropdown extends Component {
   }
   generateOptions = () => {
     const { data } = this.props;
-    //const data  = [{value:'a',desc:'12'},{value:'b',desc:'c'}]
-    console.log('props ',this.props);
-    console.log('dataDrop ',data.options.value);
-    /* const options = data.map((op, i)=>{
-      console.log(op.value)
-    }) */
-     if (!data || data.length === 0) {
+    if (!data || data.length === 0) {
       return null;
     }
     const options = data.options.map((option, i) => {
       return (
-        <option key={"option_" + i} value={option.value} name={option.value}>
+        <option key={"option_" + i} value={option.value}>
           {option.description}
         </option>
       );
-    }); 
+    });
     return options;
   };
   render() {
     const options = this.generateOptions();
-    const { data, onChange, value, mandatory, required } = this.props;
+    const {
+      data,
+      onChange,
+      value,
+      required,
+      floatLeftDropDown,
+      additionalField,
+    } = this.props;
     if (!data) {
       return null;
     }
     return (
       <div className="form-group">
         <label className={classNames("col-sm-12", required ? "required" : "")}>
-          {/*{data.header}*/}
-          Platform
+          {data.header}
         </label>
-        <div className="col-sm-12">
-          <select
-            name={data.name}
-            className={classNames(
-              "form-control form-control-line",
-              mandatory ? "mandatory" : ""
-            )}
-            value={value}
-            onChange={onChange}
-          >
-            <option value="">Select</option>
-            <option value="">AWS</option>
-            <option value="">AZURE</option>
-            <option value="">GCP</option>
-            {options}
-          </select>
-        </div>
+        {floatLeftDropDown ? (
+          <div className={"col-sm-10"}>
+            <div className="col-sm-6 float-left close-to-margin">
+              <select
+                name={data.name}
+                className={classNames(
+                  "form-control form-control-line",
+                  required && value === "" ? "mandatory" : ""
+                )}
+                value={value}
+                onChange={onChange}
+              >
+                <option value="">Select</option>
+                {options}
+              </select>
+            </div>
+            {additionalField}
+          </div>
+        ) : (
+          <div className={"col-sm-12"}>
+            <select
+              name={data.name}
+              className={classNames(
+                "form-control form-control-line",
+                required && value === "" ? "mandatory" : ""
+              )}
+              value={value}
+              onChange={onChange}
+            >
+              <option value="">Select</option>
+              {options}
+            </select>
+          </div>
+        )}
       </div>
     );
   }

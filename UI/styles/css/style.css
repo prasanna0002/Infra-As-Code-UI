@@ -2402,6 +2402,7 @@ Layouts
 .page-wrapper {
   background: #eef5f9;
   padding-bottom: 60px;
+  transition-duration: 0.5s;
 }
 
 .container-fluid {
@@ -4089,10 +4090,10 @@ Form summernote
 /*******************
 Table-Layout
 ******************/
-.table thead th,
+/* .table thead th,
 .table th {
   border: 0px;
-}
+} */
 
 .color-table.primary-table thead th {
   background-color: #7460ee;
@@ -6792,7 +6793,7 @@ Main sidebar
 ******************/
 .left-sidebar {
   position: absolute;
-  width: 240px;
+  width: 250px;
   height: 100%;
   top: 0px;
   z-index: 20;
@@ -8519,7 +8520,7 @@ When click on sidebar toggler and also for tablet
  ============================================================== */
 @media (min-width: 768px) {
   .navbar-header {
-    width: 240px;
+    width: 250px;
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -8931,9 +8932,8 @@ form p:last-child {
 /* Remove default checkbox */
 [type="checkbox"]:not(:checked),
 [type="checkbox"]:checked {
-  position: absolute;
-  left: -9999px;
-  opacity: 0;
+  left: 0px;
+  opacity: 1;
 }
 
 [type="checkbox"] {
@@ -10363,5 +10363,222 @@ pre {
 .iframe {
   border: none;
   width: 100%;
-  height: 500px;
+  height: 98vh;
+  position: absolute;
+}
+
+.hide-sidebar .page-wrapper {
+  margin-left: 0px;
+}
+
+.hide-sidebar .left-sidebar {
+  display: none;
+  height: 0;
+  transition: height 350ms ease-in-out;
+}
+
+.hide-sidebar .footer {
+  display: none;
+}
+
+.iframeWrapper {
+  padding: 2px;
+}
+
+.iframeWrapper .page-titles {
+  padding: 0px;
+}
+
+.iframeWrapper .row {
+  margin-top: 0px;
+  margin-left: 1px;
+}
+
+.bin {
+  margin-left: 25%;
+  cursor: pointer;
+}
+
+.network-configuration-delete {
+  font-size: 40px;
+}
+
+.input-checkbox {
+  margin-right: 5px;
+  height: 15px;
+  width: 15px;
+}
+
+.add-more-button {
+  background-color: lightgray;
+}
+
+.bin-icon {
+  height: 30px;
+  margin-top: 15px;
+}
+
+.table-responsive .table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.table-responsive td,
+.table-responsive th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.table-responsive tr:nth-child(odd) {
+  background-color: #f2f2f2;
+}
+
+.table-responsive tr:hover {
+  background-color: #ddd;
+}
+
+.table-responsive th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  color: #67757C;
+}
+
+/* The Modal (background) */
+.modal {
+  display: block;
+  /* Hidden by default */
+  position: fixed;
+  /* Stay in place */
+  z-index: 1;
+  /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%;
+  /* Full width */
+  height: 100%;
+  /* Full height */
+  overflow: auto;
+  /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0);
+  /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4);
+  /* Black w/ opacity */
+  margin-top: 70px;
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 2% auto 15% auto;
+  /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  margin-left: auto;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.modal .table {
+  margin-top: 15px;
+}
+
+/*forcefully removing the padding left for columns*/
+.close-to-margin {
+  padding-left: 0px;
+  ;
+}
+
+
+.show {
+  display: block;
+}
+
+.position-relative {
+  position: relative;
+}
+
+.context-menu {
+  position: absolute;
+}
+
+.context-menu li {
+  text-align: center;
+}
+
+.context-menu li:hover {
+  background-color: #ddd;
+  cursor: pointer;
+}
+
+.hide-sidebar .navbar-header {
+  display: none;
+}
+
+.system-abv {
+  font-size: 15px;
+  color: white;
+  padding-left: 5px;
+}
+
+.system-header {
+  font-size: 22px;
+  color: white;
+  margin-top: 20px;
+  margin-left: 293px;
+}
+
+.button-link {
+  background: none !important;
+  border: none;
+  padding: 0 !important;
+  /*optional*/
+  font-family: "Poppins", sans-serif;
+  /*input has OS specific font-family*/
+  color: #1e88e5 !important;
+  text-decoration: underline;
+  cursor: pointer;
+  line-height: 18px;
+  font-size: 16px;
+  font-weight: 400;
+  margin-left: 3px;
+}
+
+.btn-show {
+  visibility: visible;
+}
+
+.btn-hide {
+  visibility: hidden;
+}
+
+.success-msg {
+  margin-top: 2px
+}
+
+.filter-text {
+  margin-bottom: 10px;
+}
+
+.icon {
+  text-align: center;
+}
+
+.checkbox-label {
+  width: 209px;
 }

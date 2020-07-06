@@ -23,5 +23,17 @@ class DashboardActionCreator {
         Dispatcher.dispatch(action);
       });
   };
+
+  loadClusterData = () => {
+    WebApi.apiGet(config.API_URL + url.GET_CLUSTER)
+      .then((response) => {
+        console.log(response);
+        const action = {
+          actionType: ActionType.GET_CLUSTER_DATA,
+          value: response.data,
+        };
+        Dispatcher.dispatch(action);
+      })  
+  }
 }
 export default new DashboardActionCreator();

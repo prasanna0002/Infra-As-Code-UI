@@ -35,6 +35,7 @@ class MenuItem extends Component {
           }}
           isActive={item.isActive}
           name={item.name}
+          class={item.class}
         />
       );
     });

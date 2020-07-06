@@ -1,6 +1,15 @@
 import React, { Component } from "react";
+import classNames from "classnames";
 
 class Header extends Component {
+  constructor(props) {
+    super(props);
+  }
+  handleToggleMenu = () => {
+    if (this.props.onClick) {
+      this.props.onClick();
+    }
+  };
   render() {
     return (
       <header className="topbar is_stuck">
@@ -11,25 +20,42 @@ class Header extends Component {
                 <img
                   height="25px"
                   width="25px"
-                  
-                  src="../src/styles/images/kubernetes_1.png"
+                  src="./styles/images/kubernetes_1.png"
                   alt="homepage"
                   className="light-logo"
-                  
                 />
+              </b>
+              <b>
+                <label className="system-abv">IIP</label>
               </b>
             </a>
           </div>
-
-          <div className="col-md-5 col-8 align-self-center">
-            <h3 style={{color: 'white'}}>Infosys IaaC Platform</h3>
-          </div>
-        
           <div className="navbar-collapse">
             <ul className="navbar-nav mr-auto mt-md-0">
-              
+              <li className="nav-item">
+                <a
+                  onClick={this.handleToggleMenu}
+                  title={
+                    this.props.isMenuHidden ? "Expand Menu" : "Collapse Menu"
+                  }
+                  className="nav-link nav-toggler text-muted waves-effect waves-dark"
+                >
+                  <i
+                    className={classNames(
+                      "mdi",
+                      this.props.isMenuHidden
+                        ? "mdi-fast-forward"
+                        : "mdi-rewind"
+                    )}
+                  ></i>
+                </a>
+              </li>
+              <li className="nav-item">
+                <label className="system-header">
+                  Infosys Infrastructure Platform
+                </label>
+              </li>
             </ul>
-
             <ul className="navbar-nav my-lg-0">
               <li className="nav-item dropdown">
                 <a
@@ -39,11 +65,22 @@ class Header extends Component {
                   aria-expanded="false"
                 >
                   <img
-                    src="../src/styles/images/users/profile.png"
+                    src="./styles/images/users/profile.png"
                     alt="user"
                     className="profile-pic m-r-10"
                   />
-                  User
+                  Administrator
+                </a>
+              </li>
+            </ul>
+            <ul className="navbar-nav my-lg-0">
+              <li class="nav-item dropdown">
+                <a 
+                  title="Logout" 
+                  className="nav-link dropdown-toggle text-muted waves-effect waves-dark" 
+                  href="https://ik8mp-demo.eastus.cloudapp.azure.com:8443/auth/realms/IK8MP/protocol/openid-connect/logout?redirect_uri=http%3A%2F%2Fik8mp-demo.eastus.cloudapp.azure.com%2F"
+                >
+                  <i className="mdi mdi-power"></i>
                 </a>
               </li>
             </ul>

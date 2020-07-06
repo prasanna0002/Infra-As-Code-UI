@@ -26,7 +26,7 @@ class Item extends Component {
           aria-expanded="false"
           onClick={this.props.onClick}
         >
-          <i className="mdi mdi-account-check"></i>
+          <i className={this.props.class}></i>
           <span className="hide-menu">{this.props.name}</span>
         </a>
       </li>

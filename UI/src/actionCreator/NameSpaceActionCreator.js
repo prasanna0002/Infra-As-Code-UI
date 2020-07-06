@@ -22,5 +22,12 @@ class NameSpaceActionCreator {
         Dispatcher.dispatch(action);
       });
   };
+  saveCustomBucketRange = (bucketRangeObject) => {
+    const action = {
+      actionType: ActionType.SAVE_CUSTOM_BUCKET_RANGE,
+      value: bucketRangeObject
+    };
+    Dispatcher.dispatch(action);
+  }
 }
 export default new NameSpaceActionCreator();

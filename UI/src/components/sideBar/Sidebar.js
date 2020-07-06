@@ -16,33 +16,6 @@ class SideBar extends Component {
           <div className="slimScrollBar"></div>
           <div className="slimScrollRail"></div>
         </div>
-
-        <div className="sidebar-footer">
-          <a
-            className="link"
-            data-toggle="tooltip"
-            title=""
-            data-original-title="Settings"
-          >
-            <i className="mdi mdi-settings"></i>
-          </a>
-          <a
-            className="link"
-            data-toggle="tooltip"
-            title=""
-            data-original-title="Profile Edit"
-          >
-            <i className="fa fa-edit"></i>
-          </a>
-          <a
-            className="link"
-            data-toggle="tooltip"
-            title=""
-            data-original-title="Logout"
-          >
-            <i className="mdi mdi-power"></i>
-          </a>
-        </div>
       </aside>
     );
   }

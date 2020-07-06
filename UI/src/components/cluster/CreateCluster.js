@@ -32,7 +32,9 @@ class CreateCluster extends Component {
       lead:'',
       clusterName: "",
       message: "",
-      cloudSrvc: "AzureNative",
+      platform:"",
+      cred:{options:[{value:'aws',description:'AWS'},{value:'gcp',description:'GCP'},{value:'azure',description:'AZURE'}]},
+/*       cloudSrvc: "AzureNative",
       masterCount: "1",
       masterSize: "Standard_B2s",
       nodeSize: "Standard_B1ms",
@@ -45,7 +47,7 @@ class CreateCluster extends Component {
       masterCountMissing: false,
       clusterNameMissing: false,
       credentialsMissing: false,
-            
+ */              
     };
   };
 
@@ -191,17 +193,14 @@ class CreateCluster extends Component {
       clusterName: this.state.clusterName,
       owner: this.state.owner,
       lead:this.state.lead,
-      user: this.state.user,
-      platform:this.state.platform
     };
-    console.log('req params: ',requestParams)
+    console.log('asd',requestParams)
 
     Object.keys(requestParams).map(
       (key) => requestParams[key] === undefined && delete requestParams[key]
     );
 
     ClusterActionCreator.createCluster(requestParams);
-    
   };
 
   render() {
@@ -220,7 +219,7 @@ class CreateCluster extends Component {
           <div className="col-lg-12">
             <div className="card">
               <div className="card-block">
-                <h3 className="card-title">Create Application</h3>
+                <h3 className="card-title">Application Onboarding Screen</h3>
                 <button
                   id={"backToStatus"}
                   onClick={this.props.onClick}
@@ -247,25 +246,6 @@ class CreateCluster extends Component {
                         />
                       </div>
                     </div>
-                    
-{/*                     <div className="form-group">
-                      <label className="col-md-12 required">
-                        Application ID
-                      </label>
-                      <div className="col-md-12">
-                        <input
-                          name="nodeCount"
-                          type="text"
-                          required
-                          value={this.state.nodeCount}
-                          onChange={this.handleOnChange}
-                          className={classNames(
-                            "form-control form-control-line",
-                            this.state.nodeCountMissing ? "mandatory" : ""
-                          )}
-                        />
-                      </div>
-                    </div> */}
 
                     <div className="form-group">
                       <label className="col-md-12 required">Application Owner</label>
@@ -285,13 +265,13 @@ class CreateCluster extends Component {
                     </div>
 
                     <div className="form-group">
-                      <label className="col-md-12 required">Applicable Users</label>
+                      <label className="col-md-12 required">App users</label>
                       <div className="col-md-12">
                         <input
                           type="text"
-                          name="user"
+                          name="lead"
                           required
-                          value={this.state.user}
+                          value={this.state.lead}
                           onChange={this.handleOnChange}
                           className={classNames(
                             "form-control form-control-line",

@@ -13,13 +13,61 @@ import messages from "../../messges.json";
 class ClusterStatus extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      showContext: false,
+      contextMenuSytle: {
+        left: `0px`,
+        top: `0px`,
+      },
+      contextMenuItems: [
+        {
+          id: "Delete",
+          name: "Delete Cluster",
+        },
+      ],
+      seletedRow: null,
+      loading: false,
+      sortConfig: {
+        key: "createTime",
+        ascending: false,
+      },
+    };
   }
+
+  setSortConfig = (event) => {
+    this.setState({
+      sortConfig: {
+        key: event.target.id,
+        ascending: !this.state.sortConfig.ascending,
+      },
+    });
+  };
+
+  sortBy = (sortConfig, items) => {
+    let _items = items && items.length >= 0 ? [...items] : undefined;
+    if (_items && sortConfig.key) {
+      _items.sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+          return sortConfig.ascending ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+          return sortConfig.ascending ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return _items;
+  };
+
   getClusterList = () => {
     const { data, loading, navigate } = this.props;
     if (!data || data.length === 0) {
       return loading ? <Loader position={true} /> : null;
     }
-    const toRender = data.map((value, index) => {
+
+    const sortedData = this.sortBy(this.state.sortConfig, data);
+
+    const toRender = sortedData.map((value, index) => {
       const link = value.k8sDashboardUrl ? (
         <a
           data-url={value.k8sDashboardUrl}
@@ -35,28 +83,37 @@ class ClusterStatus extends Component {
       let status = (
         <img
           height="25px"
-          title={value.createStatus}
-          src="../src/styles/images/inProgress.png"
+          title={value.statusMessage}
+          src="./styles/images/inProgress.png"
           alt="inProgress"
         ></img>
       );
+      //TODO: Hardcoding of values here. To be fetched from API
+      let deploymentsCount = 0;
+      let cpuUtilization = "CPU 0%";
+      let alertCount = 0;
+      
       switch (value.createStatus) {
         case "Ready":
           status = (
             <img
               height="25px"
-              title={value.createStatus}
-              src="../src/styles/images/ready.png"
+              title={value.statusMessage}
+              src="./styles/images/ready.png"
               alt="inProgress"
             ></img>
           );
+          //TODO: Remove the hardcoded values using values from API.
+          deploymentsCount = value.clusterName.length;
+          cpuUtilization = "CPU " + Math.floor(Math.random() * 100 + 1) + "%";
+          alertCount = (value.clusterName.length - 5 < 0)? 2 : value.clusterName.length - 5;          
           break;
         case "InProgress":
           status = (
             <img
               height="25px"
-              title={value.createStatus}
-              src="../src/styles/images/inProgress_1.png"
+              title={value.statusMessage}
+              src="./styles/images/inProgress_1.png"
               alt="inProgress"
             ></img>
           );
@@ -65,8 +122,8 @@ class ClusterStatus extends Component {
           status = (
             <img
               height="25px"
-              title={value.createStatus}
-              src="../src/styles/images/failed.png"
+              title={value.statusMessage}
+              src="./styles/images/failed.png"
               alt="inProgress"
             ></img>
           );
@@ -75,36 +132,145 @@ class ClusterStatus extends Component {
           break;
       }
       return (
-        <tr key={index}>
+        <tr id={value.clusterReqId} key={index}>
           <td>{link}</td>
-          <td>{status}</td>
-          <td>{value.deployments}</td>
-          <td>{value.utilization}</td>
-          <td>{value.alerts}</td>
+          <td className="icon">{status}</td>
+          <td>{deploymentsCount}</td>
+          <td>{cpuUtilization}</td>
+          <td>{alertCount}</td>
+          <td id={"td_index_" + index}>
+            <a title="options" className="bin" aria-expanded="false">
+              <i
+                id={value.clusterReqId}
+                data-clustername={value.clusterName}
+                data-clusterid={value.clusterReqId}
+                onClick={this.handleContextMenu}
+                className="mdi mdi-dots-horizontal"
+              ></i>
+            </a>
+          </td>
         </tr>
       );
     });
     return toRender;
   };
+  documentClickHandler = (event) => {
+    const menu = document.getElementsByClassName("dropdown-menu")[0];
+    const isOptionsClicked = event.target.classList.contains(
+      "mdi-dots-horizontal"
+    );
+    if (!isOptionsClicked && menu) {
+      const isClickedOutside = !menu.contains(event.target);
+      if (isClickedOutside) {
+        this.setState({
+          showContext: false,
+          contextMenuSytle: {
+            left: `0px`,
+            top: `0px`,
+          },
+          seletedRow: null,
+        });
+      }
+    }
+  };
+  handleContextMenu = (event) => {
+    const selectedRow = event.target.dataset;
+    const rect = document
+      .getElementsByClassName("table-responsive")[0]
+      .getBoundingClientRect();
+    const menu = {
+      width: 160,
+      height: 30 * this.state.contextMenuItems.length,
+    };
+    let x = event.clientX - rect.left - menu.width;
+    let y = event.clientY - rect.top;
+    if (window.innerHeight < event.clientY + menu.height + 5) {
+      y = y - menu.height;
+    }
 
+    this.setState({
+      showContext: true,
+      contextMenuSytle: {
+        left: `${x}px`,
+        top: `${y}px`,
+      },
+      seletedRow: selectedRow,
+    });
+  };
+  onResize = (event) => {
+    this.setState({
+      showContext: false,
+      contextMenuSytle: {
+        left: `0px`,
+        top: `0px`,
+      },
+      seletedRow: null,
+    });
+  };
+  clusterDeleted = () => {
+    this.setState({
+      showContext: false,
+      contextMenuSytle: {
+        left: `0px`,
+        top: `0px`,
+      },
+      seletedRow: null,
+    });
+  };
+  handleContextMenuSelect = (event) => {
+    const action = event.target.id;
+    const { seletedRow } = this.state;
+    if (!seletedRow) {
+      return;
+    }
+    const payload = {
+      clusterID: seletedRow.clusterid,
+      clusterName: seletedRow.clustername,
+    };
+    switch (action) {
+      case "Delete":
+        ClusterActionCreator.deleteCluster(payload);
+        break;
+      default:
+        break;
+    }
+  };
+  componentDidMount() {
+    document.addEventListener("click", this.documentClickHandler);
+    window.addEventListener("resize", this.onResize);
+    window.addEventListener("scroll", this.onResize);
+    ClusterStore.addEventListener(
+      EventType.DELETE_CLUSTER_SUCCESS,
+      this.clusterDeleted
+    );
+  }
+  componentWillUnmount() {
+    document.removeEventListener("click", this.documentClickHandler);
+    window.removeEventListener("resize", this.onResize);
+    window.removeEventListener("scroll", this.onResize);
+    ClusterStore.addEventListener(
+      EventType.DELETE_CLUSTER_SUCCESS,
+      this.clusterDeleted
+    );
+  }
   render() {
     return (
       <div className="container-fluid">
         <div className="row page-titles">
           <div className="col-md-5 col-8 align-self-center">
-            <h3 className="text-themecolor">Cluster Management</h3>
+            <h3 className="text-themecolor">Onboarded Applications</h3>
           </div>
         </div>
         <div className="row">
           <div className="col-lg-12">
             <div className="card">
               <div className="card-block">
-                <h4 className="card-title">Application Management</h4>
-                <div className="col-md-6 pull-left">
+                <h4 className="card-title">Onboarded Applications</h4>
+                <div className="col-md-6 pull-left" style={{ padding: "0px" }}>
                   <input
                     type="text"
-                    placeholder="Search for Name or Status"
-                    className="form-control form-control-line"
+                    placeholder="Search for Application Name"
+                    className="form-control form-control-line filter-text"
                     onChange={this.props.onChange}
                     value={this.props.searchValue}
                   />
@@ -114,21 +280,86 @@ class ClusterStatus extends Component {
                   onClick={this.props.onClick}
                   className="btn pull-right btn-danger"
                 >
-                  Create Application
+                  Onboard Application
                 </button>
-                <div className="table-responsive">
+                <div className="table-responsive position-relative">
                   <table className="table">
                     <thead>
                       <tr>
-                        <th>Application Name</th>
-                        <th>Status</th>
-                        <th>Deployments</th>
-                        <th>Utilization</th>
-                        <th>Alerts</th>
+                        <th>
+                          Application Name
+                          <i
+                            id="clusterName"
+                            className="fa fa-sort float-right btn"
+                            onClick={this.setSortConfig}
+                          />
+                        </th>
+                        <th>
+                          Status
+                          <i
+                            id="createStatus"
+                            className="fa fa-sort float-right btn"
+                            onClick={this.setSortConfig}
+                          />
+                        </th>
+                        <th>
+                          Deployments
+                          <i
+                            id="deployments"
+                            className="fa fa-sort float-right btn"
+                            onClick={this.setSortConfig}
+                          />
+                        </th>
+                        <th>
+                          Utilization
+                          <i
+                            id="utilization"
+                            className="fa fa-sort float-right btn"
+                            onClick={this.setSortConfig}
+                          />
+                        </th>
+                        <th>
+                          Alerts
+                          <i
+                            id="alerts"
+                            className="fa fa-sort float-right btn"
+                            onClick={this.setSortConfig}
+                          />
+                        </th>
+                        <th>Options</th>
                       </tr>
                     </thead>
                     <tbody>{this.getClusterList()}</tbody>
                   </table>
+                  {this.state.showContext ? (
+                    <div
+                      id="context-menu"
+                      className="context-menu"
+                      style={this.state.contextMenuSytle}
+                    >
+                      <ul
+                        className={classNames(
+                          "dropdown-menu",
+                          this.state.showContext ? "show" : ""
+                        )}
+                        role="menu"
+                      >
+                        {this.state.contextMenuItems.map((item) => {
+                          return (
+                            <li>
+                              <a
+                                onClick={this.handleContextMenuSelect}
+                                id={item.id}
+                                tabindex="-1"
+                              >
+                                {item.name}
+                              </a>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
+                  ) : null}
                 </div>
               </div>
             </div>

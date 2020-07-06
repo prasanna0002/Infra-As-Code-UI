@@ -2,6 +2,7 @@ import React, { Component } from "react";
 
 import SecurityStore from "../../stores/SecurityStore";
 import SecurityActionCreator from "../../actionCreator/SecurityActionCreator";
+import DashboardActionCreator from "../../actionCreator/DashboardActionCreator";
 import DashboardStore from "../../stores/DashBoardStore";
 
 import DropDown from "../generic/Dropdown";
@@ -25,21 +26,25 @@ class Security extends Component {
   getInitialState = () => {
     return {
       message: "",
-      credentialName: "",
       selectedCredential: "",
-      credentialList: [],
       credentialData: null,
       renderedOn: Date.now,
+      sortConfig: {
+        key: undefined,
+        ascending: true,
+      },
     };
   };
 
-  securityAdded = (clusterID) => {
-    this.setState({
-      nodeCount: "",
-      clusterName: "",
-      message: messages.SECURITY.SECURITY_CREATED,
-    });
-
+  securityAdded = () => {
+    console.log("securityAdded");
+    let initialState = this.getInitialState();
+    initialState.message = messages.SECURITY.SECURITY_CREATED.replace(
+      "<credentialName>",
+      this.state.credentialData.credentialName
+    );
+    this.setState(initialState);
+    DashboardActionCreator.loadOptionsData();
     // Rerender the credential list with latest data
     SecurityActionCreator.getCredentialList({ userID: "ik8smpuser" });
   };
@@ -63,6 +68,7 @@ class Security extends Component {
     this.setState({
       renderedOn: Date.now,
     });
+    DashboardActionCreator.loadOptionsData();
     SecurityActionCreator.getCredentialList({ userID: "ik8smpuser" });
   };
 
@@ -76,22 +82,84 @@ class Security extends Component {
     });
   };
 
+  getCredentialTypeDisplayName = (credentialType) => {
+    let credType = credentialType;
+    switch (credentialType) {
+      case "azureServicePrincipal":
+        credType = "Azure Service Principal";
+        break;
+      case "awsCredential":
+        credType = "AWS Credentials";
+        break;
+      case "smtpCredential":
+        credType = "SMTP Credentials";
+        break;
+      default:
+        break;
+    }
+    return credType;
+  };
+
+  setSortConfig = (event) => {
+    this.setState({
+      sortConfig: {
+        key: event.target.id,
+        ascending: !this.state.sortConfig.ascending,
+      },
+    });
+  };
+
+  sortBy = (sortConfig, items) => {
+    let _items = items && items.length >= 0 ? [...items] : undefined;
+    if (_items && sortConfig.key) {
+      _items.sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+          return sortConfig.ascending ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+          return sortConfig.ascending ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return _items;
+  };
+
+  isCredentialExists = (credentialName) => {
+    const data = Object.assign([], SecurityStore.credentialsList);
+    const filteredData =
+      data && credentialName
+        ? data.filter((item) => {
+            return (
+              item.credentialName.toLowerCase() ===
+                credentialName.toLowerCase() &&
+              item.credentialType === this.state.selectedCredential
+            );
+          })
+        : [];
+    return filteredData.length > 0;
+  };
+
   getCredentialList = () => {
-    const credentialList = SecurityStore.credentialsList;
-    return credentialList && credentialList.length > 0 ? (
+    const _credentialList = SecurityStore.credentialsList;
+    let credentialList = this.sortBy(this.state.sortConfig, _credentialList);
+
+    return credentialList && credentialList.length >= 0 ? (
       credentialList.map((credential) => {
         return (
           <tr key={credential.credentialName}>
             <td>{credential.credentialName}</td>
-            <td>{credential.credentialType}</td>
             <td>
-              <button
-                id={credential.credentialName}
-                onClick={this.handleDeleteCredential}
-                className="btn btn-danger"
-              >
-                Delete
-              </button>
+              {this.getCredentialTypeDisplayName(credential.credentialType)}
+            </td>
+            <td>
+              <a title="Delete" className="bin" aria-expanded="false">
+                <i
+                  id={credential.credentialName}
+                  onClick={this.handleDeleteCredential}
+                  className="mdi mdi-delete"
+                ></i>
+              </a>
             </td>
           </tr>
         );
@@ -156,14 +224,32 @@ class Security extends Component {
   handleOnChange = (event) => {
     let credentialData = Object.assign({}, this.state.credentialData);
     credentialData[event.target.id] = event.target.value;
-    this.setState({ credentialData: credentialData });
+    let message = "";
+
+    if (event.target.id === "credentialName") {
+      message = this.isCredentialExists(event.target.value)
+        ? messages.SECURITY.DUPLICATE_CREDENTIAL
+        : "";
+    } else if (this.state.credentialData.credentialName) {
+      message = this.isCredentialExists(
+        this.state.credentialData.credentialName
+      )
+        ? messages.SECURITY.DUPLICATE_CREDENTIAL
+        : "";
+    }
+    this.setState({ credentialData: credentialData, message: message });
   };
   isInValid = () => {
-    const { credentialData, selectedCredential } = this.state;
+    const { credentialData, selectedCredential, message } = this.state;
     const components = SecurityStore.getCredentialComponents(
       selectedCredential
     );
-    if (!components || !credentialData || !credentialData.credentialName) {
+    if (
+      !components ||
+      !credentialData ||
+      !credentialData.credentialName ||
+      message === messages.SECURITY.DUPLICATE_CREDENTIAL
+    ) {
       return true;
     }
     return components.some((component) => {
@@ -174,6 +260,7 @@ class Security extends Component {
     this.setState({
       credentialData: {},
       [event.target.name]: event.target.value,
+      message: "",
     });
   };
 
@@ -190,7 +277,11 @@ class Security extends Component {
         id={"credentialName"}
         labelName={"Name"}
         onChange={this.handleOnChange}
-        value={this.state.credentialData.credentialName}
+        value={
+          this.state.credentialData.credentialName
+            ? this.state.credentialData.credentialName
+            : ""
+        }
         required={true}
       />
     );
@@ -238,7 +329,10 @@ class Security extends Component {
     event.preventDefault();
     const credentialName = event.target.id;
     swal({
-      title: "Are you sure?",
+      title: messages.SECURITY.DELETE_CONFIRMATION.replace(
+        "<credentialName>",
+        credentialName
+      ),
       buttons: true,
     }).then((value) => {
       if (value) {
@@ -272,7 +366,7 @@ class Security extends Component {
       userID: "ik8smpuser", //TODO - Lgged in user id, correct after development of login
       credentialType: this.state.selectedCredential,
       credentialName: this.state.credentialData.credentialName,
-      azurePrincipal: selectedComponentItems,
+      [this.state.selectedCredential]: selectedComponentItems,
     });
   };
   render() {
@@ -295,8 +389,22 @@ class Security extends Component {
                   <table className="table">
                     <thead>
                       <tr>
-                        <th>Credential Name</th>
-                        <th>Credential Type</th>
+                        <th>
+                          Credential Name
+                          <i
+                            id="credentialName"
+                            className="fa fa-sort float-right btn"
+                            onClick={this.setSortConfig}
+                          />
+                        </th>
+                        <th>
+                          Credential Type
+                          <i
+                            id="credentialType"
+                            className="fa fa-sort float-right btn"
+                            onClick={this.setSortConfig}
+                          />
+                        </th>
                         <th>Delete</th>
                       </tr>
                     </thead>

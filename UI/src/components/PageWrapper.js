@@ -10,8 +10,8 @@ import EventType from "../constants/eventType";
 import Menu from "../constants/menu";
 
 class PageWrapper extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
   }
   componentDidMount() {
     MenuStore.addEventListener(EventType.MENU_SELECTED, this.menuSeleted);
@@ -27,18 +27,17 @@ class PageWrapper extends Component {
   componentToRender = () => {
     let component = <UnderConstruction />;
     const selectedMenu = MenuStore.getSelectedMenu();
-    console.log('selecMen', selectedMenu);
     switch (selectedMenu.name) {
       case Menu.DASHBOARD:
         component = <DashBoard />;
         break;
-      case Menu.APPLICATIONS:
-        component = <ClusterWrapper />;
+      case Menu.CLUSTER_MANAGEMENT:
+        component = <ClusterWrapper clusterData={this.props.clusterData} />;
         break;
-      case Menu.BLUEPRINTS:
+      case Menu.SECURITY:
         component = <Security />;
         break;
-      case Menu.RESOURCES:
+      case Menu.NAMESPACE:
         component = <NameSpace />;
         break;
       default:

@@ -21,7 +21,6 @@ class SecurityStore extends EventEmitter {
       case ActionType.GET_LOOKUP_OPTIONS_DATA:
         this.lookupOptionData = action.value;
         this.emit(EventType.GET_LOOKUP_OPTIONS);
-        // this.getCredentialComponents("AzureServicePrinciple");
         break;
       case ActionType.GET_CREDENTIALS_SUCCESS:
         this.credentialsList = action.data;
