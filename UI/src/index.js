@@ -4,7 +4,7 @@ import App from './components/App';
 import Keycloak from 'keycloak-js'
 
 
- let initOptions = {
+ /* let initOptions = {
         url: 'http://localhost:8082/auth/', 
     realm: 'IAC_realm', clientId: 'IAC_UI_Client',
      onLoad: 'login-required'
@@ -20,7 +20,7 @@ keycloak.init({ onLoad: initOptions.onLoad }).success((auth) => {
         console.info("Authenticated");
     }
 //put here
-ReactDOM.render(<App/>, document.getElementById('app'))
+ReactDOM.render(<App/>, document.getElementById('app')) */
 
 /*     setTimeout(() => {
         keycloak.updateToken(70).success((refreshed) => {
@@ -35,9 +35,9 @@ ReactDOM.render(<App/>, document.getElementById('app'))
         });
 
 
-    }, 6000) */
+    }, 6000) 
 }).error(() => {
     console.error("Authenticated Failed");
-});  
+});  */
  
-//ReactDOM.render(<App/>, document.getElementById('app'))
+ReactDOM.render(<App/>, document.getElementById('app'))

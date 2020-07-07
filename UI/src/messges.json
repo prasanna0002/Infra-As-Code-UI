@@ -1,6 +1,6 @@
 {
     "CLUSTER": {
-        "CLUSTER_CREATED": "Cluster creation has been initiated successfully.",
+        "CLUSTER_CREATED": "Application creation has been initiated successfully.",
         "SOMETHING_WRONG": "Something went wrong!!",
         "FIELD_MISSING": "Please enter valid inputs"
     },

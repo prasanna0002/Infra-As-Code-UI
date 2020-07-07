@@ -99,7 +99,7 @@ class App extends Component {
     });
   };
   componentDidMount() {
-    console.log(this.state);
+    //console.log(this.state);
     DashboardActionCreator.loadOptionsData();
     DashboardActionCreator.loadClusterData();
     DashboardStore.addEventListener(

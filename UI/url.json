@@ -7,5 +7,6 @@
     "DELETE_CREDENTIALS": "api/v1/deleteCredential",
     "GET_CLUSTER_STATUS": "api/v1/clusterStatus",
     "CREATE_NAMESPACE": "api/v1/namespaces",
-    "GET_CLUSTER": "api/v1/clusters"
+    "GET_CLUSTER": "api/v1/clusters",
+    "CREATE_APPLICATION": "api/v1/application"
 }

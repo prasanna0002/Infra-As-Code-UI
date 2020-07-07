@@ -9,12 +9,15 @@ import ClusterActionCreator from "../../actionCreator/ClusterActionCreator";
 
 import EventType from "../../constants/eventType";
 import messages from "../../messges.json";
+import CreateCluster from "./CreateCluster";
+import { alertBox } from "../alert/alert";
 
 class ClusterStatus extends Component {
   constructor(props) {
     super(props);
     this.state = {
       showContext: false,
+      envBox: false,
       contextMenuSytle: {
         left: `0px`,
         top: `0px`,
@@ -145,7 +148,7 @@ class ClusterStatus extends Component {
                 data-clustername={value.clusterName}
                 data-clusterid={value.clusterReqId}
                 onClick={this.handleContextMenu}
-                className="mdi mdi-dots-horizontal"
+                className="mdi mdi-plus"
               ></i>
             </a>
           </td>
@@ -157,7 +160,7 @@ class ClusterStatus extends Component {
   documentClickHandler = (event) => {
     const menu = document.getElementsByClassName("dropdown-menu")[0];
     const isOptionsClicked = event.target.classList.contains(
-      "mdi-dots-horizontal"
+      "mdi-plus"
     );
     if (!isOptionsClicked && menu) {
       const isClickedOutside = !menu.contains(event.target);
@@ -174,6 +177,9 @@ class ClusterStatus extends Component {
     }
   };
   handleContextMenu = (event) => {
+    
+    var a = prompt("Please enter environment Name:");
+    console.log(a);
     const selectedRow = event.target.dataset;
     const rect = document
       .getElementsByClassName("table-responsive")[0]
@@ -190,6 +196,7 @@ class ClusterStatus extends Component {
 
     this.setState({
       showContext: true,
+      envBox: true,
       contextMenuSytle: {
         left: `${x}px`,
         top: `${y}px`,
@@ -258,14 +265,14 @@ class ClusterStatus extends Component {
       <div className="container-fluid">
         <div className="row page-titles">
           <div className="col-md-5 col-8 align-self-center">
-            <h3 className="text-themecolor">Onboarded Applications</h3>
+            <h3 className="text-themecolor">Application Management</h3>
           </div>
         </div>
         <div className="row">
           <div className="col-lg-12">
             <div className="card">
               <div className="card-block">
-                <h4 className="card-title">Onboarded Applications</h4>
+                <h4 className="card-title">Application Management</h4>
                 <div className="col-md-6 pull-left" style={{ padding: "0px" }}>
                   <input
                     type="text"
@@ -280,7 +287,7 @@ class ClusterStatus extends Component {
                   onClick={this.props.onClick}
                   className="btn pull-right btn-danger"
                 >
-                  Onboard Application
+                  Create Cluster
                 </button>
                 <div className="table-responsive position-relative">
                   <table className="table">
@@ -365,7 +372,9 @@ class ClusterStatus extends Component {
             </div>
           </div>
         </div>
+        {this.state.envBox? <CreateCluster/>: null}
       </div>
+      
     );
   }
 }

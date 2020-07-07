@@ -7,7 +7,7 @@ import url from "../../url.json";
 
 class ClusterActionCreator {
   createCluster = (parameterList) => {
-    WebApi.apiPost(config.API_URL + url.CREATE_CLUSTER_ASYNC, parameterList)
+    WebApi.apiPost(config.IAC_URL + url.CREATE_APPLICATION, parameterList)
       .then((response) => {
         const action = {
           actionType: ActionType.CREATE_CLUSTER,

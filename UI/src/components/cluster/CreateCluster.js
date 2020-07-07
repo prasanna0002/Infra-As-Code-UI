@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import classNames from "classnames";
+import axios from 'axios';
 
 import DropDown from "../generic/Dropdown";
 import Loader from "../loader/Loader";
@@ -55,7 +56,7 @@ class CreateCluster extends Component {
     this.setState({
       nodeCount: "",
       clusterName: "",
-      message: messages.CLUSTER.CLUSTER_CREATED + " : " + clusterID,
+      message: messages.CLUSTER.CLUSTER_CREATED /* + " : " + clusterID */,
     });
   };
 
@@ -99,6 +100,8 @@ class CreateCluster extends Component {
 
   componentDidMount() {
     //this.loadLookupOptionsData();
+/*     axios.get('https://jsonplaceholder.typicode.com/todos')
+      .then(response=> console.log('sampe json :',response)) */
 
     ClusterStore.addEventListener(
       EventType.CREATE_CLUSTER_SUCCESS,
@@ -125,7 +128,7 @@ class CreateCluster extends Component {
     this.setState(this.getInitialState());
   };
   handleOnChange = (event) => {
-    console.log("eve", event.target.value);
+    //console.log("eve", event.target.value);
     this.setState({
       [event.target.name]: event.target.value,
       [event.target.name + "Missing"]: false,
@@ -133,7 +136,7 @@ class CreateCluster extends Component {
     });
   };
   handleDropDownChange = (event)=>{
-    console.log("dropdown change")
+    //console.log("dropdown change")
     this.setState({
       platform: event.target.value,
       message: ""
@@ -160,10 +163,10 @@ class CreateCluster extends Component {
   
   handleSubmit = (event) => {
     event.preventDefault();
-    console.log('submit', this.state);
-    const {clusterName, appID } = this.state;
+    //console.log('submit', this.state);
+    const {clusterName, appID, appName, platform } = this.state;
 
-    if (!clusterName) {
+    if (!clusterName ) {
       this.setState({
         message: messages.CLUSTER.FIELD_MISSING,
         clusterNameMissing: !clusterName,
@@ -188,18 +191,25 @@ class CreateCluster extends Component {
       loggingEnabled: this.state.loggingEnabled,
       monitoringEnabled: this.state.monitoringEnabled,
       credentialName: this.state.credentials,
-      kubeDashboard: this.state.kubeDashboard,*/
+      kubeDashboard: this.state.kubeDashboard,
       nodeCount: this.state.nodeCount ? this.state.nodeCount : Date.now(),
       clusterName: this.state.clusterName,
       owner: this.state.owner,
-      lead:this.state.lead,
+      lead:this.state.lead,*/
+
+      appId: Math.floor(Math.random() * 100 + 1),
+      appName: this.state.clusterName,
+      appOwner: this.state.owner,
+      users:this.state.lead,
+      platform: this.state.platform,
+      userId: 'abc'
     };
-    console.log('asd',requestParams)
 
     Object.keys(requestParams).map(
       (key) => requestParams[key] === undefined && delete requestParams[key]
     );
 
+  console.info('rq',requestParams)
     ClusterActionCreator.createCluster(requestParams);
   };
 
@@ -207,7 +217,7 @@ class CreateCluster extends Component {
     if (this.state.loading || !this.state.lookupData.provider) {
       return <Loader />;
     }
-    console.log('cred ',this.state.cred);
+    //console.log('cred ',this.state.cred);
     return (
       <div className="container-fluid">
         <div className="row page-titles">
@@ -281,13 +291,14 @@ class CreateCluster extends Component {
                       </div>
                     </div>
                     
+                    <label className="col-md-12 required">Platform</label>
                      <DropDown
                       data={this.state.cred}
                       value={this.state.cred}
                       name='platform'
                       onChange={this.handleDropDownChange}
                       mandatory={this.state.credentialsMissing}
-                      required={true}
+                      
 /> 
 
                     <div className="form-group float-left">
@@ -310,9 +321,9 @@ class CreateCluster extends Component {
                         </button>
                       </div>
                     </div>
-{/*                     <div className="form-group">
+                    <div className="form-group">
                       <h5 className="text-themecolor">{this.state.message}</h5>
-                    </div> */}
+                    </div>
                   </form>
                 </div>
               </div>
