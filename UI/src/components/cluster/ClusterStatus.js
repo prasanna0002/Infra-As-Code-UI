@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import classNames from "classnames";
+import swal from 'sweetalert'
 
 import DropDown from "../generic/Dropdown";
 import Loader from "../loader/Loader";
@@ -17,7 +18,6 @@ class ClusterStatus extends Component {
     super(props);
     this.state = {
       showContext: false,
-      envBox: false,
       contextMenuSytle: {
         left: `0px`,
         top: `0px`,
@@ -68,8 +68,16 @@ class ClusterStatus extends Component {
       return loading ? <Loader position={true} /> : null;
     }
 
-    const sortedData = this.sortBy(this.state.sortConfig, data);
-
+    //const sortedData = this.sortBy(this.state.sortConfig, data);
+    //console.log('sortedData', sortedData);
+    const sortedData = [{
+      clusterReqId: "0d3ed01c-e36c-4121-9096-0c3f235078c2",
+      id: 0, createStatus: "Failure", clusterName: "Application_1", environment: ['dev', 'as'], k8sDashboardUrl: null
+    },
+    {
+      clusterReqId: "0d3ed01c-e36c-4121-9096-0c3f235078c2",
+      id: 0, createStatus: "Failure", clusterName: "Application_23", environment: [''], k8sDashboardUrl: null
+    }]
     const toRender = sortedData.map((value, index) => {
       const link = value.k8sDashboardUrl ? (
         <a
@@ -81,8 +89,8 @@ class ClusterStatus extends Component {
           {value.clusterName}
         </a>
       ) : (
-        value.clusterName
-      );
+          value.clusterName
+        );
       let status = (
         <img
           height="25px"
@@ -95,7 +103,19 @@ class ClusterStatus extends Component {
       let deploymentsCount = 0;
       let cpuUtilization = "CPU 0%";
       let alertCount = 0;
+      let environment_first = (
+        <span
+          data-url={value.k8sDashboardUrl}
+          className=""
+          onClick={this.props.navigate}
+          href="#"
+        >
+          {value.environment[0]}
+        </span>
+        )
       
+      
+
       switch (value.createStatus) {
         case "Ready":
           status = (
@@ -108,8 +128,9 @@ class ClusterStatus extends Component {
           );
           //TODO: Remove the hardcoded values using values from API.
           deploymentsCount = value.clusterName.length;
+          
           cpuUtilization = "CPU " + Math.floor(Math.random() * 100 + 1) + "%";
-          alertCount = (value.clusterName.length - 5 < 0)? 2 : value.clusterName.length - 5;          
+          alertCount = (value.clusterName.length - 5 < 0) ? 2 : value.clusterName.length - 5;
           break;
         case "InProgress":
           status = (
@@ -137,18 +158,24 @@ class ClusterStatus extends Component {
       return (
         <tr id={value.clusterReqId} key={index}>
           <td>{link}</td>
-          <td className="icon">{status}</td>
+          <td>{environment_first}</td>
+          
+          {/* <td>{environment}</td> */}
+          {/* <td className="icon">{status}</td>
+          
+          
           <td>{deploymentsCount}</td>
           <td>{cpuUtilization}</td>
-          <td>{alertCount}</td>
+          <td>{alertCount}</td> */}
           <td id={"td_index_" + index}>
             <a title="options" className="bin" aria-expanded="false">
               <i
                 id={value.clusterReqId}
                 data-clustername={value.clusterName}
                 data-clusterid={value.clusterReqId}
+                //onClick={this.props.plusSelect}
                 onClick={this.handleContextMenu}
-                className="mdi mdi-plus"
+                className="mdi mdi-plus-circle"
               ></i>
             </a>
           </td>
@@ -176,11 +203,47 @@ class ClusterStatus extends Component {
       }
     }
   };
+
   handleContextMenu = (event) => {
-    
-    var a = prompt("Please enter environment Name:");
-    console.log(a);
     const selectedRow = event.target.dataset;
+    //console.log('selectedRow ',selectedRow.clustername);
+    const appname = selectedRow.clustername;
+    swal({
+      text: `Enter Environment Name for "${appname}" application`,
+      content: "input",
+      button: {
+        text: "Deploy!",
+        closeModal: false,
+      },
+    })
+      .then(name => {
+        console.log('entered name', name);
+        if (!name) throw null;
+
+        return fetch(`https://itunes.apple.com/search?term=${name}&entity=movie`);
+      })
+      .then(results => {
+        return results.json();
+      })
+      .then(json => {
+        const movie = json.results[0];
+
+        if (!movie) {
+          return swal("No movie was found!");
+        }
+
+        const name = movie.trackName;
+        const imageURL = movie.artworkUrl100;
+
+        swal({
+          title: "Top result:",
+          text: name,
+          icon: imageURL,
+        });
+      })
+      
+
+
     const rect = document
       .getElementsByClassName("table-responsive")[0]
       .getBoundingClientRect();
@@ -196,7 +259,6 @@ class ClusterStatus extends Component {
 
     this.setState({
       showContext: true,
-      envBox: true,
       contextMenuSytle: {
         left: `${x}px`,
         top: `${y}px`,
@@ -287,7 +349,7 @@ class ClusterStatus extends Component {
                   onClick={this.props.onClick}
                   className="btn pull-right btn-danger"
                 >
-                  Create Cluster
+                  Onboard Application
                 </button>
                 <div className="table-responsive position-relative">
                   <table className="table">
@@ -302,6 +364,14 @@ class ClusterStatus extends Component {
                           />
                         </th>
                         <th>
+                          Environment Deployed
+                          {/*                         <i
+                            id="deployments"
+                            className="fa fa-sort float-right btn"
+                            onClick={this.setSortConfig}
+                          /> */}
+                        </th>
+                        {/* <th>
                           Status
                           <i
                             id="createStatus"
@@ -332,8 +402,8 @@ class ClusterStatus extends Component {
                             className="fa fa-sort float-right btn"
                             onClick={this.setSortConfig}
                           />
-                        </th>
-                        <th>Options</th>
+                        </th> */}
+                        <th>Add Environment</th>
                       </tr>
                     </thead>
                     <tbody>{this.getClusterList()}</tbody>
@@ -372,9 +442,8 @@ class ClusterStatus extends Component {
             </div>
           </div>
         </div>
-        {this.state.envBox? <CreateCluster/>: null}
       </div>
-      
+
     );
   }
 }

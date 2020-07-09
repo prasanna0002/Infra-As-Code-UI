@@ -41,6 +41,7 @@ class ClusterWrapper extends Component {
       isIframe: false,
     });
   };
+
   handleOnChange = (event) => {
     this.setState({
       searchValue: event.target.value,
@@ -117,6 +118,7 @@ class ClusterWrapper extends Component {
           onChange={this.handleOnChange}
           data={filteredData}
           searchValue={searchValue}
+          plusSelect={this.plusHandler}
           loading={loading}
           navigate={this.handleNavigate}
         />

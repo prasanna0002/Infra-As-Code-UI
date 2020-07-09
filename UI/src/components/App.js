@@ -30,7 +30,7 @@ class App extends Component {
     });
   };
   iframeLoaded = () => {
-    console.log("iframeLoaded");
+    //console.log("iframeLoaded");
     this.setState({
       isMenuHidden: true,
     });
@@ -38,6 +38,7 @@ class App extends Component {
 
   getFilteredData = (clusterId) => {
     const { data } = this.state;
+    //console.log('app data',data);
     const updatedData = Object.assign([], data);
     const filteredData = updatedData
       ? updatedData.filter((item) => {
@@ -62,6 +63,7 @@ class App extends Component {
     this.eventSource = null;
     this.eventSource = new EventSource(config.API_URL + url.GET_CLUSTER_STATUS);
     this.eventSource.onmessage = (e) =>
+      //console.log('clsad ',JSON.parse(e.data))
       this.updateClusterStatus(JSON.parse(e.data));
   };
   toggleMenu = () => {
@@ -99,9 +101,9 @@ class App extends Component {
     });
   };
   componentDidMount() {
-    //console.log(this.state);
     DashboardActionCreator.loadOptionsData();
     DashboardActionCreator.loadClusterData();
+    //console.log('app cpm',this.state.data);
     DashboardStore.addEventListener(
       EventType.GET_LOOKUP_OPTIONS_DATA_SUCCESS,
       this.lookupOptionDataLoaded

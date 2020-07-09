@@ -9,7 +9,7 @@ class DashboardActionCreator {
   loadOptionsData = () => {
     WebApi.apiGet(config.API_URL + url.LOOKUP_OPTIONS_DATA)
       .then((response) => {
-        console.log(response);
+        //console.log(response);
         const action = {
           actionType: ActionType.GET_LOOKUP_OPTIONS_DATA,
           value: response.data,
@@ -25,9 +25,10 @@ class DashboardActionCreator {
   };
 
   loadClusterData = () => {
+    //console.log('url',config.API_URL + url.GET_CLUSTER);
     WebApi.apiGet(config.API_URL + url.GET_CLUSTER)
       .then((response) => {
-        console.log(response);
+        console.log('cluster data',response);
         const action = {
           actionType: ActionType.GET_CLUSTER_DATA,
           value: response.data,

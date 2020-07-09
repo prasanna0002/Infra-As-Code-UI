@@ -78,7 +78,8 @@ class Header extends Component {
                 <a 
                   title="Logout" 
                   className="nav-link dropdown-toggle text-muted waves-effect waves-dark" 
-                  href="https://ik8mp-demo.eastus.cloudapp.azure.com:8443/auth/realms/IK8MP/protocol/openid-connect/logout?redirect_uri=http%3A%2F%2Fik8mp-demo.eastus.cloudapp.azure.com%2F"
+                  href="http://localhost:8082/auth/realms/IAC_realm/protocol/openid-connect/logout?redirect_uri=http%3A%2F%2Flocalhost%3A8080%2F"
+                  
                 >
                   <i className="mdi mdi-power"></i>
                 </a>

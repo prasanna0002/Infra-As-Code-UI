@@ -29,7 +29,8 @@ class CreateCluster extends Component {
   getInitialState = () => {
     return {
       nodeCount: "",
-      owner:'',
+      appClientId: "",
+      owner:"",
       lead:'',
       clusterName: "",
       message: "",
@@ -164,9 +165,9 @@ class CreateCluster extends Component {
   handleSubmit = (event) => {
     event.preventDefault();
     //console.log('submit', this.state);
-    const {clusterName, appID, appName, platform } = this.state;
+    const {clusterName, appID, appName, platform, appClientId } = this.state;
 
-    if (!clusterName ) {
+    if (!clusterName || !appClientId || !platform ) {
       this.setState({
         message: messages.CLUSTER.FIELD_MISSING,
         clusterNameMissing: !clusterName,
@@ -198,18 +199,19 @@ class CreateCluster extends Component {
       lead:this.state.lead,*/
 
       appId: Math.floor(Math.random() * 100 + 1),
+      appClientId: this.state.appClientId,
       appName: this.state.clusterName,
       appOwner: this.state.owner,
       users:this.state.lead,
       platform: this.state.platform,
-      userId: 'abc'
+      userId: 'user1'
     };
 
     Object.keys(requestParams).map(
       (key) => requestParams[key] === undefined && delete requestParams[key]
     );
 
-  console.info('rq',requestParams)
+  //console.info('rq',requestParams)
     ClusterActionCreator.createCluster(requestParams);
   };
 
@@ -258,6 +260,23 @@ class CreateCluster extends Component {
                     </div>
 
                     <div className="form-group">
+                      <label className="col-md-12 required">Client Application Id</label>
+                      <div className="col-md-12">
+                        <input
+                          type="text"
+                          name="appClientId"
+                          required
+                          value={this.state.appClientId}
+                          onChange={this.handleOnChange}
+                          className={classNames(
+                            "form-control form-control-line",
+                            this.state.clusterNameMissing ? "mandatory" : ""
+                          )}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="form-group">
                       <label className="col-md-12 required">Application Owner</label>
                       <div className="col-md-12">
                         <input
@@ -275,7 +294,7 @@ class CreateCluster extends Component {
                     </div>
 
                     <div className="form-group">
-                      <label className="col-md-12 required">App users</label>
+                      <label className="col-md-12 required">Application users</label>
                       <div className="col-md-12">
                         <input
                           type="text"
@@ -291,7 +310,7 @@ class CreateCluster extends Component {
                       </div>
                     </div>
                     
-                    <label className="col-md-12 required">Platform</label>
+                          <label className="col-md-12 required">Platform: {(this.state.platform).toUpperCase()}</label>
                      <DropDown
                       data={this.state.cred}
                       value={this.state.cred}

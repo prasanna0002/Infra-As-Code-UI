@@ -4,7 +4,7 @@ import App from './components/App';
 import Keycloak from 'keycloak-js'
 
 
- /* let initOptions = {
+  let initOptions = {
         url: 'http://localhost:8082/auth/', 
     realm: 'IAC_realm', clientId: 'IAC_UI_Client',
      onLoad: 'login-required'
@@ -17,12 +17,12 @@ keycloak.init({ onLoad: initOptions.onLoad }).success((auth) => {
     if (!auth) {
         window.location.reload();
     } else {
-        console.info("Authenticated");
+        console.info("Authenticated", keycloak.token);
     }
 //put here
-ReactDOM.render(<App/>, document.getElementById('app')) */
+ReactDOM.render(<App/>, document.getElementById('app')) 
 
-/*     setTimeout(() => {
+    setTimeout(() => {
         keycloak.updateToken(70).success((refreshed) => {
             if (refreshed) {
                 console.debug('Token refreshed' + refreshed);
@@ -38,6 +38,6 @@ ReactDOM.render(<App/>, document.getElementById('app')) */
     }, 6000) 
 }).error(() => {
     console.error("Authenticated Failed");
-});  */
+});  
  
-ReactDOM.render(<App/>, document.getElementById('app'))
+//ReactDOM.render(<App/>, document.getElementById('app'))
