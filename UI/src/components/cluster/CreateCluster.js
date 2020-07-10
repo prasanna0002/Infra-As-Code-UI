@@ -165,9 +165,9 @@ class CreateCluster extends Component {
   handleSubmit = (event) => {
     event.preventDefault();
     //console.log('submit', this.state);
-    const {clusterName, appID, appName, platform, appClientId } = this.state;
+    const {clusterName, appName, platform, appClientId } = this.state;
 
-    if (!clusterName || !appClientId || !platform ) {
+    if (!clusterName || !appClientId || !platform || !appName ) {
       this.setState({
         message: messages.CLUSTER.FIELD_MISSING,
         clusterNameMissing: !clusterName,

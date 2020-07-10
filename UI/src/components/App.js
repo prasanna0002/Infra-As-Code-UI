@@ -12,6 +12,10 @@ import config from "../../config.json";
 import url from "../../url.json";
 import classNames from "classnames";
 
+import '../../styles/css/bootstrap.min.css'
+import '../../styles/css/blue.css';
+import '../../styles/css/style.css';
+
 class App extends Component {
   constructor(props) {
     super(props);

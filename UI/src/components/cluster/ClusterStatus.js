@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import classNames from "classnames";
-import swal from 'sweetalert'
+//import swal from 'sweetalert';
+//import Swal from 'sweetalert2';
 
 import DropDown from "../generic/Dropdown";
 import Loader from "../loader/Loader";
@@ -11,7 +12,7 @@ import ClusterActionCreator from "../../actionCreator/ClusterActionCreator";
 import EventType from "../../constants/eventType";
 import messages from "../../messges.json";
 import CreateCluster from "./CreateCluster";
-import { alertBox } from "../alert/alert";
+import { envBox } from "../alert/alert";
 
 class ClusterStatus extends Component {
   constructor(props) {
@@ -206,44 +207,45 @@ class ClusterStatus extends Component {
 
   handleContextMenu = (event) => {
     const selectedRow = event.target.dataset;
-    //console.log('selectedRow ',selectedRow.clustername);
-    const appname = selectedRow.clustername;
-    swal({
-      text: `Enter Environment Name for "${appname}" application`,
-      content: "input",
-      button: {
-        text: "Deploy!",
-        closeModal: false,
+    let res = envBox(selectedRow.clustername);
+    //console.log('env res',res);
+    /* Swal.fire({
+      title: 'Add Environment',
+      inputPlaceholder: 'Environment Name!',
+      //titleText: 'Add Environment',
+      text: `App Name: ${selectedRow.clustername}`,
+      input: 'text',
+      inputAttributes: {
+        autocapitalize: 'On'
       },
-    })
-      .then(name => {
-        console.log('entered name', name);
-        if (!name) throw null;
-
-        return fetch(`https://itunes.apple.com/search?term=${name}&entity=movie`);
-      })
-      .then(results => {
-        return results.json();
-      })
-      .then(json => {
-        const movie = json.results[0];
-
-        if (!movie) {
-          return swal("No movie was found!");
-        }
-
-        const name = movie.trackName;
-        const imageURL = movie.artworkUrl100;
-
-        swal({
-          title: "Top result:",
-          text: name,
-          icon: imageURL,
-        });
-      })
-      
-
-
+      showCancelButton: false,
+      confirmButtonText: 'Add',
+      showLoaderOnConfirm: true,
+      preConfirm: (login) => {
+        return fetch(`https://jsonplaceholder.typicode.com/todos/1`)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(response.statusText)
+            }
+            return response.json()
+          })
+          .catch(error => {
+            Swal.showValidationMessage(
+              `Request failed: ${error}`
+            )
+          })
+      },
+      allowOutsideClick: () => !Swal.isLoading()
+    }).then((result) => {
+      console.log(result)
+      if (result.value) {
+        Swal.fire({
+          title: `${result.value.login} environment creation initiated!`
+          
+        })
+      }
+    })*/
+    
     const rect = document
       .getElementsByClassName("table-responsive")[0]
       .getBoundingClientRect();

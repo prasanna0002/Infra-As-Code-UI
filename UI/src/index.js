@@ -2,9 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './components/App';
 import Keycloak from 'keycloak-js'
+//import '../../styles/css/style.css';
 
 
-  let initOptions = {
+    let initOptions = {
         url: 'http://localhost:8082/auth/', 
     realm: 'IAC_realm', clientId: 'IAC_UI_Client',
      onLoad: 'login-required'
@@ -17,7 +18,7 @@ keycloak.init({ onLoad: initOptions.onLoad }).success((auth) => {
     if (!auth) {
         window.location.reload();
     } else {
-        console.info("Authenticated", keycloak.token);
+        console.info("Authenticated", keycloak.tokenParsed.name);
     }
 //put here
 ReactDOM.render(<App/>, document.getElementById('app')) 
@@ -38,6 +39,6 @@ ReactDOM.render(<App/>, document.getElementById('app'))
     }, 6000) 
 }).error(() => {
     console.error("Authenticated Failed");
-});  
+});    
  
 //ReactDOM.render(<App/>, document.getElementById('app'))
